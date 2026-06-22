@@ -5,6 +5,16 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>World Cup 2026 — Live Scores, Groups &amp; Bracket</title>
 <meta name="description" content="Live FIFA World Cup 2026 scores with venues and kickoff times, group standings, and a forecasted two-sided knockout bracket from the live standings." />
+<!-- Favicon: inline SVG (browser tab icon). No separate file needed. -->
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' rx='14' fill='%2317130E'/><circle cx='32' cy='32' r='18' fill='none' stroke='%23D6AC6B' stroke-width='3'/><circle cx='32' cy='32' r='6.5' fill='%23D6AC6B'/><g stroke='%23D6AC6B' stroke-width='2.6' stroke-linecap='round'><path d='M32 25.5V15'/><path d='M38.2 30 47 24'/><path d='M35.8 38 41 47'/><path d='M28.2 38 23 47'/><path d='M25.8 30 17 24'/></g></svg>" />
+<!-- Social-share preview (used when the link is posted to iMessage, X, Facebook, etc.) -->
+<meta property="og:title" content="Live Scores, Groups &amp; Bracket" />
+<meta property="og:description" content="Live scores with venues and kickoff times, group standings, and a knockout bracket that fills in from the standings." />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://livescores.it.com/" />
+<meta name="twitter:card" content="summary_large_image" />
+<!-- Google AdSense -->
+<script async id="adsbygoogle-js" src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4737414504868283" crossorigin="anonymous"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..700;1,6..96,400..600&family=Hanken+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
@@ -567,7 +577,7 @@ const CONFIG={
 // ===== Ads + remove-ads =====
 const ADS={
   ENABLED:true,
-  ADSENSE_CLIENT:"",   // your AdSense publisher id, e.g. "ca-pub-1234567890123456" (blank = styled placeholder)
+  ADSENSE_CLIENT:"ca-pub-4737414504868283",   // your AdSense publisher id (slots below still need ids before real ads serve)
   SLOTS:{ leaderboard:"", footer:"", midsection:"", groupsL:"", groupsR:"", bracketL:"", bracketR:"" },   // AdSense ad-unit slot ids that match each slot
   PRICE:"$4.99",
   STRIPE_LINK:"",      // Stripe Payment Link URL. Set its success page to redirect back here with ?ads=removed
@@ -667,13 +677,12 @@ document.querySelectorAll("[data-rev]").forEach(el=>io.observe(el));
 let mins=68;setInterval(()=>{if(liveStat.dataset.mode==="live")return;const el=document.querySelector(".feat__h .l");if(el){mins=Math.min(90,mins+1);el.innerHTML=`<span class="live-dot"></span>Live · ${mins}'`;}},15000);
 
 // ===== Ads runtime =====
-const KEY="wc26_noads";
-const adState={
-  _m:false,
-  get removed(){try{return localStorage.getItem(KEY)==="1";}catch(e){return this._m;}},
-  set(v){this._m=v;try{localStorage.setItem(KEY,v?"1":"0");}catch(e){}}
-};
-const adWraps=()=>document.querySelectorAll(".adwrap");
+let ADS_OFF=false;                  // single source of truth for hiding ads this load
+const TOKK="wc26_tok";              // server-signed entitlement token (server mode)
+const FLAGK="wc26_noads";           // local flag (honor mode only, until the Worker is connected)
+const mem={};
+const ls={get(k){try{return localStorage.getItem(k);}catch(e){return mem[k]||null;}},
+          set(k,v){try{localStorage.setItem(k,v);}catch(e){mem[k]=v;}}};
 const rmBtn=document.getElementById("rmAds");
 const adModal=document.getElementById("adModal");
 
@@ -682,56 +691,67 @@ function placeholder(el){
   el.innerHTML=`<span class="adslot__tag">Advertisement</span><div class="adph"><b>Your ad here</b><span>Reach engaged sports fans. ${buy}</span></div>`;
 }
 function renderAds(){
-  if(!ADS.ENABLED||adState.removed)return;          // nothing to draw when removed/disabled
+  if(!ADS.ENABLED||ADS_OFF)return;
   document.querySelectorAll(".adslot").forEach(el=>{
     const key=el.dataset.ad;
-    if(ADS.ADSENSE_CLIENT&&ADS.SLOTS[key]){          // real AdSense unit
+    if(ADS.ADSENSE_CLIENT&&ADS.SLOTS[key]){          // real AdSense unit (needs a slot id)
       el.innerHTML=`<span class="adslot__tag">Advertisement</span>`+
         `<ins class="adsbygoogle" style="display:block;width:100%" data-ad-client="${ADS.ADSENSE_CLIENT}" data-ad-slot="${ADS.SLOTS[key]}" data-ad-format="auto" data-full-width-responsive="true"></ins>`;
       try{(window.adsbygoogle=window.adsbygoogle||[]).push({});}catch(e){}
-    }else{ placeholder(el); }                        // styled house placeholder until configured
+    }else{ placeholder(el); }                        // styled house placeholder until a slot id is set
   });
 }
-function loadAdSense(){
-  if(!ADS.ADSENSE_CLIENT||adState.removed||document.getElementById("adsbygoogle-js"))return;
+function loadAdSense(){                               // the script is already in <head>; this is a no-op guard
+  if(!ADS.ADSENSE_CLIENT||ADS_OFF||document.getElementById("adsbygoogle-js"))return;
   const s=document.createElement("script");s.id="adsbygoogle-js";s.async=true;s.crossOrigin="anonymous";
   s.src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client="+ADS.ADSENSE_CLIENT;
   document.head.appendChild(s);
 }
 function applyAds(){
-  const off=!ADS.ENABLED||adState.removed;
+  const off=!ADS.ENABLED||ADS_OFF;
   document.body.classList.toggle("noads",off);
   if(rmBtn){
-    if(adState.removed){rmBtn.textContent="Ads removed ✓";rmBtn.classList.add("done");}
+    if(ADS_OFF){rmBtn.textContent="Ads removed ✓";rmBtn.classList.add("done");}
     else{rmBtn.textContent="Remove ads";rmBtn.classList.remove("done");}
   }
   if(!off){loadAdSense();renderAds();}
 }
-function removeAds(){adState.set(true);applyAds();closeModal();}
+
+// ---- entitlement check ----
+// SERVER MODE (ADS.VERIFY_URL set): the Worker verifies the Stripe payment server-side and returns a
+//   signed token. The browser stores it but cannot forge it; every load re-validates it with the Worker,
+//   so editing localStorage or adding ?ads=removed by hand does nothing. This is the uncheatable path.
+// HONOR MODE (no VERIFY_URL yet): a local flag only — fine to ship, but not enforced.
+async function resolveEntitlement(){
+  const q=new URLSearchParams(location.search);
+  if(ADS.VERIFY_URL){
+    const sid=q.get("session_id");
+    if(sid){                                          // just returned from Stripe checkout
+      try{const r=await fetch(`${ADS.VERIFY_URL}/verify?session_id=${encodeURIComponent(sid)}`);
+          const d=await r.json(); if(d&&d.token)ls.set(TOKK,d.token);}catch(e){}
+      history.replaceState({},"",location.pathname);
+    }
+    const t=ls.get(TOKK); if(!t)return false;
+    try{const r=await fetch(`${ADS.VERIFY_URL}/check?token=${encodeURIComponent(t)}`);
+        const d=await r.json(); return !!(d&&d.valid);}
+    catch(e){return false;}                           // can't reach the Worker -> show ads (fail safe for revenue)
+  }
+  if(q.get("ads")==="removed"){ls.set(FLAGK,"1");history.replaceState({},"",location.pathname);}
+  return ls.get(FLAGK)==="1";
+}
 
 // modal
 function openModal(){if(!adModal)return;document.getElementById("adPrice").innerHTML=`${ADS.PRICE} <small>one-time</small>`;adModal.classList.add("on");}
 function closeModal(){adModal&&adModal.classList.remove("on");}
 async function startCheckout(){
-  if(!ADS.STRIPE_LINK){ // no link configured yet: explain, don't fake a charge
-    alert("Checkout isn't connected yet. Add a Stripe Payment Link to ADS.STRIPE_LINK to enable real payments.");
-    return;
-  }
-  // hand off to Stripe-hosted checkout; the success page returns here with ?ads=removed
-  window.location.href=ADS.STRIPE_LINK;
+  if(!ADS.STRIPE_LINK){alert("Checkout isn't connected yet. Add your Stripe Payment Link to ADS.STRIPE_LINK.");return;}
+  window.location.href=ADS.STRIPE_LINK;               // Stripe success URL should return to /?session_id={CHECKOUT_SESSION_ID}
 }
-async function checkPaid(){
-  // 1) returning from a successful Stripe checkout
-  const q=new URLSearchParams(location.search);
-  if(q.get("ads")==="removed"||location.hash==="#ads-removed"){
-    // optional server verification for real enforcement
-    if(ADS.VERIFY_URL&&q.get("session_id")){
-      try{const r=await fetch(`${ADS.VERIFY_URL}?session_id=${encodeURIComponent(q.get("session_id"))}`);
-        const d=await r.json(); if(!d||!d.paid)return; }catch(e){return;}
-    }
-    adState.set(true);
-    history.replaceState({},"",location.pathname);   // clean the URL
-  }
+async function restore(){
+  if(ADS.VERIFY_URL){ ADS_OFF=await resolveEntitlement(); }
+  else { ls.set(FLAGK,"1"); ADS_OFF=true; }
+  applyAds();
+  if(ADS_OFF)closeModal(); else alert("We couldn't verify a completed purchase for this browser.");
 }
 
 if(rmBtn)rmBtn.addEventListener("click",openModal);
@@ -739,11 +759,11 @@ if(adModal){
   document.getElementById("adModalX").addEventListener("click",closeModal);
   adModal.addEventListener("click",e=>{if(e.target===adModal)closeModal();});
   document.getElementById("adBuy").addEventListener("click",startCheckout);
-  document.getElementById("adRestore").addEventListener("click",e=>{e.preventDefault();removeAds();});
+  document.getElementById("adRestore").addEventListener("click",e=>{e.preventDefault();restore();});
 }
 document.addEventListener("click",e=>{const b=e.target.closest("[data-buy]");if(b){e.preventDefault();openModal();}});
 
-(async()=>{ await checkPaid(); applyAds(); })();
+(async()=>{ ADS_OFF=await resolveEntitlement(); applyAds(); })();
 
 </script>
 </body>
