@@ -244,7 +244,7 @@
     <a class="brand" href="#top">WORLD CUP <b>26</b></a>
     <nav class="nav__links" id="navLinks"><a href="#scores">Scores</a><a href="#groups">Groups</a><a href="#bracket">Bracket</a></nav>
     <span class="nav__live"><span class="live-dot"></span>Live</span>
-    <button class="nav__rm" id="rmAds" type="button">Remove ads</button>
+    <button class="nav__rm" id="goPro" type="button">Remove ads</button>
     <button class="nav__tog" id="navTog" aria-label="Menu"><span></span><span></span><span></span></button>
   </div>
 </header>
@@ -331,15 +331,15 @@
 
 <div class="adwrap" id="adFoot"><div class="adslot adslot--foot" data-ad="footer"><span class="adslot__tag">Advertisement</span></div></div>
 
-<div class="modal" id="adModal" role="dialog" aria-modal="true" aria-labelledby="adModalT">
+<div class="modal" id="proModal" role="dialog" aria-modal="true" aria-labelledby="proModalT">
   <div class="modal__card">
-    <button class="modal__x" id="adModalX" aria-label="Close">&times;</button>
+    <button class="modal__x" id="proModalX" aria-label="Close">&times;</button>
     <p class="eyebrow">Ad-free</p>
-    <h3 id="adModalT">Enjoy World Cup 26, ad-free</h3>
+    <h3 id="proModalT">Enjoy World Cup 26, ad-free</h3>
     <p>A one-time purchase removes every ad on this site for this browser. Thanks for supporting independent coverage.</p>
-    <div class="modal__price" id="adPrice">$4.99 <small>one-time</small></div>
-    <button class="btn btn--bronze" id="adBuy">Continue to secure checkout</button>
-    <p class="modal__note">Payments handled by Stripe. <a id="adRestore">Already paid? Restore</a></p>
+    <div class="modal__price" id="proPrice">$4.99 <small>one-time</small></div>
+    <button class="btn btn--bronze" id="proBuy">Continue to secure checkout</button>
+    <p class="modal__note">Payments handled by Stripe. <a id="proRestore">Already paid? Restore</a></p>
   </div>
 </div>
 
@@ -665,7 +665,7 @@ function applySite(){
   const logo=`${SITE.name} <b>${SITE.accent}</b>`;
   document.querySelectorAll(".brand").forEach(b=>{const f=b.querySelector("b");const styled=f&&f.getAttribute("style");b.innerHTML=styled?`${SITE.name} <b style="${styled}">${SITE.accent}</b>`:logo;});
   const eb=document.querySelector(".hero__top .eyebrow"); if(eb)eb.textContent=SITE.eyebrow;
-  const mt=document.getElementById("adModalT"); if(mt)mt.textContent=`Enjoy ${SITE.display}, ad-free`;
+  const mt=document.getElementById("proModalT"); if(mt)mt.textContent=`Enjoy ${SITE.display}, ad-free`;
 }
 applySite();
 renderAll();
@@ -683,8 +683,8 @@ const FLAGK="wc26_noads";           // local flag (honor mode only, until the Wo
 const mem={};
 const ls={get(k){try{return localStorage.getItem(k);}catch(e){return mem[k]||null;}},
           set(k,v){try{localStorage.setItem(k,v);}catch(e){mem[k]=v;}}};
-const rmBtn=document.getElementById("rmAds");
-const adModal=document.getElementById("adModal");
+const proBtn=document.getElementById("goPro");
+const proModal=document.getElementById("proModal");
 
 function placeholder(el){
   const buy=ADS.STRIPE_LINK?`<a href="#" data-buy>Remove ads</a>`:`your brand here`;
@@ -710,9 +710,9 @@ function loadAdSense(){                               // the script is already i
 function applyAds(){
   const off=!ADS.ENABLED||ADS_OFF;
   document.body.classList.toggle("noads",off);
-  if(rmBtn){
-    if(ADS_OFF){rmBtn.textContent="Ads removed ✓";rmBtn.classList.add("done");}
-    else{rmBtn.textContent="Remove ads";rmBtn.classList.remove("done");}
+  if(proBtn){
+    if(ADS_OFF){proBtn.textContent="Ads removed ✓";proBtn.classList.add("done");}
+    else{proBtn.textContent="Remove ads";proBtn.classList.remove("done");}
   }
   if(!off){loadAdSense();renderAds();}
 }
@@ -741,8 +741,8 @@ async function resolveEntitlement(){
 }
 
 // modal
-function openModal(){if(!adModal)return;document.getElementById("adPrice").innerHTML=`${ADS.PRICE} <small>one-time</small>`;adModal.classList.add("on");}
-function closeModal(){adModal&&adModal.classList.remove("on");}
+function openModal(){if(!proModal)return;document.getElementById("proPrice").innerHTML=`${ADS.PRICE} <small>one-time</small>`;proModal.classList.add("on");}
+function closeModal(){proModal&&proModal.classList.remove("on");}
 async function startCheckout(){
   if(!ADS.STRIPE_LINK){alert("Checkout isn't connected yet. Add your Stripe Payment Link to ADS.STRIPE_LINK.");return;}
   window.location.href=ADS.STRIPE_LINK;               // Stripe success URL should return to /?session_id={CHECKOUT_SESSION_ID}
@@ -754,15 +754,15 @@ async function restore(){
   if(ADS_OFF)closeModal(); else alert("We couldn't verify a completed purchase for this browser.");
 }
 
-if(rmBtn)rmBtn.addEventListener("click",openModal);
-if(adModal){
-  document.getElementById("adModalX").addEventListener("click",closeModal);
-  adModal.addEventListener("click",e=>{if(e.target===adModal)closeModal();});
-  document.getElementById("adBuy").addEventListener("click",startCheckout);
-  document.getElementById("adRestore").addEventListener("click",e=>{e.preventDefault();restore();});
+if(proBtn)proBtn.addEventListener("click",openModal);
+if(proModal){
+  document.getElementById("proModalX").addEventListener("click",closeModal);
+  proModal.addEventListener("click",e=>{if(e.target===proModal)closeModal();});
+  document.getElementById("proBuy").addEventListener("click",startCheckout);
+  document.getElementById("proRestore").addEventListener("click",e=>{e.preventDefault();restore();});
 }
 document.addEventListener("click",e=>{
-  if(e.target.closest("#rmAds")){e.preventDefault();openModal();return;}
+  if(e.target.closest("#goPro")){e.preventDefault();openModal();return;}
   const b=e.target.closest("[data-buy]");if(b){e.preventDefault();openModal();}
 });
 
