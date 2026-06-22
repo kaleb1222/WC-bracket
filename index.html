@@ -580,8 +580,8 @@ const ADS={
   ADSENSE_CLIENT:"ca-pub-4737414504868283",   // your AdSense publisher id (slots below still need ids before real ads serve)
   SLOTS:{ leaderboard:"", footer:"", midsection:"", groupsL:"", groupsR:"", bracketL:"", bracketR:"" },   // AdSense ad-unit slot ids that match each slot
   PRICE:"$4.99",
-  STRIPE_LINK:"",      // Stripe Payment Link URL. Set its success page to redirect back here with ?ads=removed
-  VERIFY_URL:""        // optional serverless endpoint for tamper-proof verification (see notes)
+  STRIPE_LINK:"https://buy.stripe.com/eVqbJ20Ge92NbnR3Yy53O00",      // Stripe Payment Link (its redirect must return to the site with session_id)
+  VERIFY_URL:"https://cky-firefly-007e.kalebbays24.workers.dev"        // serverless endpoint for tamper-proof verification
 };
 function renderAll(){renderHero();renderMarquee();renderGroups();renderScores(curFilter());renderBracket();}
 
