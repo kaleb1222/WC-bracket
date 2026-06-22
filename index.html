@@ -80,7 +80,7 @@
   .section{padding-block:clamp(46px,7vw,92px)}
   .s-head{display:flex;justify-content:space-between;align-items:flex-end;gap:1.2rem;flex-wrap:wrap;margin-bottom:clamp(26px,4vw,46px)}
   .s-head h2{font-family:var(--disp);font-weight:500;font-size:clamp(1.9rem,4.4vw,3.1rem);line-height:1.04;letter-spacing:-.01em}
-  .s-head h2 em{font-style:italic;color:var(--bronze-2)}
+  .s-head h2 em{font-style:normal;color:var(--bronze-2)}
   .s-head p{color:var(--muted);font-size:.95rem;max-width:330px}
 
   .ctrls{display:flex;gap:.7rem;align-items:center;flex-wrap:wrap}
@@ -150,6 +150,7 @@
   .tiewrap{display:flex;flex-direction:column;gap:2px}
   .tie{display:flex;flex-direction:column;gap:3px;cursor:default}
   .ko{font-size:.56rem;color:var(--bronze-2);text-align:center;letter-spacing:.02em;white-space:nowrap}
+  .bvenue{font-size:.52rem;color:var(--muted);text-align:center;letter-spacing:.02em;white-space:nowrap;margin-top:1px}
   .row{display:flex;align-items:center;gap:.35rem;padding:.3rem .4rem;font-size:.72rem;font-weight:600;background:var(--panel);border:1px solid var(--line);border-radius:5px;transition:border-color .15s,background .15s}
   .tie:hover .row{border-color:rgba(214,172,107,.45)}
   .row .fl{width:18px;height:12px}
@@ -241,33 +242,13 @@
 <body>
 <header class="nav" id="nav">
   <div class="wrap nav__in">
-    <a class="brand" href="#top">WORLD CUP <b>26</b></a>
+    <a class="brand" href="#scores" aria-label="Home"><svg viewBox="0 0 64 64" width="30" height="30" xmlns="http://www.w3.org/2000/svg"><circle cx="32" cy="32" r="18" fill="none" stroke="var(--bronze-2)" stroke-width="3"/><circle cx="32" cy="32" r="6.5" fill="var(--bronze-2)"/><g stroke="var(--bronze-2)" stroke-width="2.6" stroke-linecap="round"><path d="M32 25.5V15"/><path d="M38.2 30 47 24"/><path d="M35.8 38 41 47"/><path d="M28.2 38 23 47"/><path d="M25.8 30 17 24"/></g></svg></a>
     <nav class="nav__links" id="navLinks"><a href="#scores">Scores</a><a href="#groups">Groups</a><a href="#bracket">Bracket</a></nav>
     <span class="nav__live"><span class="live-dot"></span>Live</span>
     <button class="nav__rm" id="goPro" type="button">Remove ads</button>
     <button class="nav__tog" id="navTog" aria-label="Menu"><span></span><span></span><span></span></button>
   </div>
 </header>
-
-<section class="hero" id="top">
-  <div class="wrap hero__in">
-    <div class="hero__top">
-      <div data-rev>
-        <p class="eyebrow">FIFA World Cup · USA · Canada · Mexico</p>
-        <h1>The world is <em>watching.</em></h1>
-        <p class="sub">Live scores with venues and kickoff times, every group, and a bracket that fills in as the groups decide it.</p>
-        <div class="hero__meta"><span class="tag" id="updated">Updated just now</span><span class="tag">Group Stage · Matchday 2</span></div>
-        <div class="hero__stats">
-          <div><div class="n">48</div><div class="l">Teams</div></div>
-          <div><div class="n">12</div><div class="l">Groups</div></div>
-          <div><div class="n" id="playedN">—</div><div class="l">Matches played</div></div>
-          <div><div class="n">32</div><div class="l">Reach knockouts</div></div>
-        </div>
-      </div>
-      <div data-rev id="featWrap"></div>
-    </div>
-  </div>
-</section>
 
 <div class="marq"><div class="marq__t" id="marq"></div></div>
 
@@ -303,12 +284,12 @@
   <div class="secrails">
     <aside class="adrail adrail--l"><div class="adslot adslot--rail" data-ad="groupsL"><span class="adslot__tag">Advertisement</span></div></aside>
   <div class="wrap">
-    <div class="s-head" data-rev><div><p class="eyebrow">Standings</p><h2>All twelve <em>groups</em></h2></div><p>Top two of each group plus the eight best third-placed teams reach the Round of 32.</p></div>
+    <div class="s-head" data-rev><div><p class="eyebrow">Standings</p></div><p>Top two of each group plus the eight best third-placed teams reach the Round of 32.</p></div>
     <div class="groups" id="groupGrid" data-rev></div>
     <div class="legend">
-      <span><i style="background:var(--green)"></i>1st — through</span>
-      <span><i style="background:var(--bronze)"></i>2nd — through</span>
-      <span><i style="background:rgba(185,138,75,.4)"></i>3rd — chasing a best-third spot</span>
+      <span><i style="background:var(--green)"></i>1st through</span>
+      <span><i style="background:var(--bronze)"></i>2nd through</span>
+      <span><i style="background:rgba(185,138,75,.4)"></i>3rd chasing a best-third spot</span>
     </div>
   </div>
     <aside class="adrail adrail--r"><div class="adslot adslot--rail" data-ad="groupsR"><span class="adslot__tag">Advertisement</span></div></aside>
@@ -321,7 +302,7 @@
   <div class="secrails">
     <aside class="adrail adrail--l"><div class="adslot adslot--rail" data-ad="bracketL"><span class="adslot__tag">Advertisement</span></div></aside>
   <div class="wrap">
-    <div class="s-head" data-rev><div><p class="eyebrow">Knockouts</p><h2>Forecasted <em>bracket</em></h2></div><p>The Round of 32 fills in live from the current standings. Winners aren't predicted — those are decided on the pitch.</p></div>
+    <div class="s-head" data-rev><div><p class="eyebrow">Knockouts</p><h2>Forecasted bracket</h2></div><p>Hover any Round of 32 matchup to see each team's projected chance of reaching that spot.</p></div>
     <div class="thirds" data-rev id="thirds"></div>
     <div class="brk__scroll" data-rev><div class="brk" id="brkGrid"></div></div>
   </div>
@@ -346,10 +327,9 @@
 <footer class="foot">
   <div class="wrap foot__in">
     <div>
-      <div class="brand">WORLD CUP <b style="color:var(--bronze-2)">26</b></div>
+      <div class="brand"><svg viewBox="0 0 64 64" width="26" height="26" xmlns="http://www.w3.org/2000/svg"><circle cx="32" cy="32" r="18" fill="none" stroke="var(--bronze-2)" stroke-width="3"/><circle cx="32" cy="32" r="6.5" fill="var(--bronze-2)"/><g stroke="var(--bronze-2)" stroke-width="2.6" stroke-linecap="round"><path d="M32 25.5V15"/><path d="M38.2 30 47 24"/><path d="M35.8 38 41 47"/><path d="M28.2 38 23 47"/><path d="M25.8 30 17 24"/></g></svg></div>
       <p>Scores, venues, and standings reflect the latest available data. Advancement chances and the projected bracket seeding are model estimates for entertainment, not official predictions. Knockout results are left blank until played.</p>
     </div>
-    <button class="btn btn--bronze" onclick="location.reload()">Refresh</button>
   </div>
 </footer>
 
@@ -372,7 +352,7 @@ let GROUPS={
  L:[["England","ENG",1,0,0,3],["Ghana","GHA",1,0,0,3],["Panama","PAN",0,1,0,0],["Croatia","CRO",0,1,0,0]]
 };
 let GAMES=[
- ["Uruguay","URU","Cape Verde","CPV",2,1,"live","68'","2026-06-21T22:00:00Z","Hard Rock Stadium","Miami, FL"],
+ ["Uruguay","URU","Cape Verde","CPV",2,1,"final","FT","2026-06-21T22:00:00Z","Hard Rock Stadium","Miami, FL"],
  ["New Zealand","NZL","Egypt","EGY",0,0,"upcoming",{h:16.1,d:23.4,a:60.5},"2026-06-22T01:00:00Z","BC Place","Vancouver, BC"],
  ["Argentina","ARG","Austria","AUT",0,0,"upcoming",{h:63.6,d:22,a:14.4},"2026-06-22T17:00:00Z","AT&T Stadium","Arlington, TX"],
  ["France","FRA","Iraq","IRQ",0,0,"upcoming",{h:91,d:6.7,a:2.3},"2026-06-22T21:00:00Z","Lincoln Financial Field","Philadelphia, PA"],
@@ -408,7 +388,7 @@ function advPct(w,l,d,pts,rank){const gp=w+l+d;
   if(gp>=2){if(pts>=6)return 97;if(pts>=4)return rank<=2?84:70;if(pts===3)return rank<=2?58:44;if(pts===2)return rank<=2?44:33;if(pts===1)return rank<=2?27:20;return 8;}
   if(pts===3)return rank<=2?64:58;return 26;}
 
-function renderHero(){const g=GAMES.find(x=>x[6]==="live")||GAMES[0];
+function renderHero(){const w=$("#featWrap");if(!w)return;const g=GAMES.find(x=>x[6]==="live")||GAMES[0];
   $("#featWrap").innerHTML=`<div class="feat"><div class="feat__h"><span class="l"><span class="live-dot"></span>Live · ${g[7]||""}</span><span>${g[11]||SITE.label}</span></div>
     <div class="feat__row"><span class="feat__team">${fl(g[1])}${g[0]}</span><span class="feat__sc">${g[4]}</span></div>
     <div class="feat__row"><span class="feat__team">${fl(g[3])}${g[2]}</span><span class="feat__sc">${g[5]}</span></div>
@@ -450,7 +430,7 @@ function renderBracket(){
   const W={},R={},third={};
   for(const[g,rows]of Object.entries(GROUPS)){const s=rows.map(r=>({name:r[0],ab:r[1],pts:r[5],w:r[2],grp:g}));W[g]=s[0];R[g]=s[1];third[g]=s[2];}
   const thirds=Object.values(third).sort((a,b)=>b.pts-a.pts||b.w-a.w);
-  $("#thirds").innerHTML=`<h3>Best third-placed teams</h3><p>Eight of twelve third-placed teams advance. Ranked by points — a live projection; official tiebreakers will shift this.</p>
+  $("#thirds").innerHTML=`<h3>Best third-placed teams</h3>
     <div class="thirds__grid">${thirds.map((t,i)=>`<div class="third ${i<8?'in':'out'}"><span class="rk">${i+1}</span>${fl(t.ab)}${t.name}<span style="margin-left:auto;color:var(--muted);font-size:.76rem">${t.pts}p</span></div>`).join("")}</div>`;
   const top8=thirds.slice(0,8);
 
@@ -466,38 +446,48 @@ function renderBracket(){
   const TM=third.__map||{};
   const P=p=>"3·"+p;                         // third seed label carries the pool
 
-  // Official Round of 32 (matches 73–88), ordered so adjacent pairs feed the correct Round of 16.
-  // Each: [teamA, seedA, teamB, seedB, kickoffUTC]
-  const M=(a,sa,b,sb,utc)=>[a,sa,b,sb,utc];
-  const leftR32=[                            // → SF (matches 74,77,73,75,76,78,79,80)
-    M(W.E,"1E",TM[74],P(POOL[74]),"2026-06-29T20:30:00Z"), M(W.I,"1I",TM[77],P(POOL[77]),"2026-06-30T21:00:00Z"),
-    M(R.A,"2A",R.B,"2B","2026-06-28T19:00:00Z"),           M(W.F,"1F",R.C,"2C","2026-06-30T01:00:00Z"),
-    M(W.C,"1C",R.F,"2F","2026-06-29T17:00:00Z"),           M(R.E,"2E",R.I,"2I","2026-06-30T17:00:00Z"),
-    M(W.A,"1A",TM[79],P(POOL[79]),"2026-07-01T01:00:00Z"), M(W.L,"1L",TM[80],P(POOL[80]),"2026-07-01T16:00:00Z")
+  // Official Round of 32 (matches 73–88). Each: [teamA, seedA, teamB, seedB, kickoffUTC, city]
+  const M=(a,sa,b,sb,utc,city)=>[a,sa,b,sb,utc,city];
+  const leftR32=[
+    M(W.E,"1E",TM[74],P(POOL[74]),"2026-06-29T20:30:00Z","Boston"),     M(W.I,"1I",TM[77],P(POOL[77]),"2026-06-30T21:00:00Z","New Jersey"),
+    M(R.A,"2A",R.B,"2B","2026-06-28T19:00:00Z","Los Angeles"),           M(W.F,"1F",R.C,"2C","2026-06-30T01:00:00Z","Monterrey"),
+    M(W.C,"1C",R.F,"2F","2026-06-29T17:00:00Z","Houston"),               M(R.E,"2E",R.I,"2I","2026-06-30T17:00:00Z","Dallas"),
+    M(W.A,"1A",TM[79],P(POOL[79]),"2026-07-01T01:00:00Z","Mexico City"), M(W.L,"1L",TM[80],P(POOL[80]),"2026-07-01T16:00:00Z","Atlanta")
   ];
-  const rightR32=[                           // → SF (matches 83,84,81,82,86,88,85,87)
-    M(R.K,"2K",R.L,"2L","2026-07-02T23:00:00Z"),           M(W.H,"1H",R.J,"2J","2026-07-02T19:00:00Z"),
-    M(W.D,"1D",TM[81],P(POOL[81]),"2026-07-02T00:00:00Z"), M(W.G,"1G",TM[82],P(POOL[82]),"2026-07-01T20:00:00Z"),
-    M(W.J,"1J",R.H,"2H","2026-07-03T22:00:00Z"),           M(R.D,"2D",R.G,"2G","2026-07-03T18:00:00Z"),
-    M(W.B,"1B",TM[85],P(POOL[85]),"2026-07-03T03:00:00Z"), M(W.K,"1K",TM[87],P(POOL[87]),"2026-07-04T01:30:00Z")
+  const rightR32=[
+    M(R.K,"2K",R.L,"2L","2026-07-02T23:00:00Z","Toronto"),               M(W.H,"1H",R.J,"2J","2026-07-02T19:00:00Z","Los Angeles"),
+    M(W.D,"1D",TM[81],P(POOL[81]),"2026-07-02T00:00:00Z","San Francisco"),M(W.G,"1G",TM[82],P(POOL[82]),"2026-07-01T20:00:00Z","Seattle"),
+    M(W.J,"1J",R.H,"2H","2026-07-03T22:00:00Z","Miami"),                 M(R.D,"2D",R.G,"2G","2026-07-03T18:00:00Z","Dallas"),
+    M(W.B,"1B",TM[85],P(POOL[85]),"2026-07-03T03:00:00Z","Vancouver"),   M(W.K,"1K",TM[87],P(POOL[87]),"2026-07-04T01:30:00Z","Kansas City")
   ];
-  const fmtKO_unused=0;
+  // Scheduled date + venue for the later rounds (teams TBD until played). { utc, city }
+  const KO=(utc,city)=>({utc,city});
+  const r16L=[KO("2026-07-04T21:00:00Z","Philadelphia"),KO("2026-07-04T17:00:00Z","Houston"),KO("2026-07-05T20:00:00Z","New Jersey"),KO("2026-07-06T00:00:00Z","Mexico City")];
+  const qfL =[KO("2026-07-09T20:00:00Z","Boston"),KO("2026-07-11T21:00:00Z","Miami")];
+  const sfL =[KO("2026-07-14T19:00:00Z","Dallas")];
+  const sfR =[KO("2026-07-15T19:00:00Z","Atlanta")];
+  const qfR =[KO("2026-07-10T19:00:00Z","Los Angeles"),KO("2026-07-12T01:00:00Z","Kansas City")];
+  const r16R=[KO("2026-07-06T19:00:00Z","Dallas"),KO("2026-07-07T00:00:00Z","Seattle"),KO("2026-07-07T16:00:00Z","Atlanta"),KO("2026-07-07T20:00:00Z","Vancouver")];
+  const finalKO=KO("2026-07-19T19:00:00Z","New Jersey"), thirdKO=KO("2026-07-18T21:00:00Z","Miami");
+
+  const koLine=(utc,city)=>`<div class="ko" data-utc="${utc}">${fmtKO(utc)}</div><div class="bvenue">${city}</div>`;
   const row=(o,seed)=>o?`<div class="row">${fl(o.ab)}${o.ab}<span class="seed">${seed[0]==="3"?"3rd":seed}</span></div>`:`<div class="row tbd">TBD</div>`;
-  const tie=(m)=>{const at=m[0]?` data-sa="${m[1]}" data-sb="${m[3]}" data-ta="${m[0].ab}" data-tb="${m[2].ab}"`:"";const ko=m[4]?`<div class="ko" data-utc="${m[4]}">${fmtKO(m[4])}</div>`:"";return `<div class="match"><div class="tiewrap"><div class="tie"${at}>${row(m[0],m[1])}${row(m[2],m[3])}</div>${ko}</div></div>`;};
-  const tbd=()=>`<div class="match"><div class="tiewrap"><div class="tie">${row(null)}${row(null)}</div></div></div>`;
+  const tie=(m)=>{const at=m[0]?` data-sa="${m[1]}" data-sb="${m[3]}" data-ta="${m[0].ab}" data-tb="${m[2].ab}"`:"";const meta=m[4]?koLine(m[4],m[5]||""):"";return `<div class="match"><div class="tiewrap"><div class="tie"${at}>${row(m[0],m[1])}${row(m[2],m[3])}</div>${meta}</div></div>`;};
+  const tbd=(k)=>`<div class="match"><div class="tiewrap"><div class="tie">${row(null)}${row(null)}</div>${k?koLine(k.utc,k.city):""}</div></div>`;
   const matches=a=>`<div class="matches">${a.join("")}</div>`;
   const round=(lab,inner,cls)=>`<div class="round ${cls||''}"><div class="round__lab">${lab}</div>${inner}</div>`;
-  const nTBD=n=>matches(Array.from({length:n},tbd));
 
-  // left half: outer R32 → SF (left to right)
-  const left=`<div class="side side-l">${round("Round of 32",matches(leftR32.map(tie)),"outer")+round("Round of 16",nTBD(4))+round("Quarter-finals",nTBD(2))+round("Semi-finals",nTBD(1))}</div>`;
-  // right half: SF → outer R32 (left to right), flowing inward toward the center
-  const right=`<div class="side side-r">${round("Semi-finals",nTBD(1))+round("Quarter-finals",nTBD(2))+round("Round of 16",nTBD(4))+round("Round of 32",matches(rightR32.map(tie)),"outer")}</div>`;
+  // left half: outer R32 → SF
+  const left=`<div class="side side-l">${round("Round of 32",matches(leftR32.map(tie)),"outer")+round("Round of 16",matches(r16L.map(tbd)))+round("Quarter-finals",matches(qfL.map(tbd)))+round("Semi-finals",matches(sfL.map(tbd)))}</div>`;
+  // right half: SF → outer R32 (flowing inward)
+  const right=`<div class="side side-r">${round("Semi-finals",matches(sfR.map(tbd)))+round("Quarter-finals",matches(qfR.map(tbd)))+round("Round of 16",matches(r16R.map(tbd)))+round("Round of 32",matches(rightR32.map(tie)),"outer")}</div>`;
   const center=`<div class="center">
       <div class="center__lab">Final</div>
       <div class="final"><div class="row tbd">TBD</div><div class="row tbd">TBD</div></div>
+      ${koLine(finalKO.utc,finalKO.city)}
       <div class="champ"><div class="ic">🏆</div><div class="lab">Champion</div><div class="nm">To be decided</div></div>
       <div class="third-box">3rd Place<b>TBD</b></div>
+      ${koLine(thirdKO.utc,thirdKO.city)}
     </div>`;
   $("#brkGrid").innerHTML=left+center+right;
 
@@ -663,7 +653,7 @@ function applySite(){
   document.title=SITE.title;
   const md=document.querySelector('meta[name="description"]'); if(md)md.setAttribute("content",SITE.desc);
   const logo=`${SITE.name} <b>${SITE.accent}</b>`;
-  document.querySelectorAll(".brand").forEach(b=>{const f=b.querySelector("b");const styled=f&&f.getAttribute("style");b.innerHTML=styled?`${SITE.name} <b style="${styled}">${SITE.accent}</b>`:logo;});
+  // brand is now the soccer-ball logo (set in HTML); leave it untouched
   const eb=document.querySelector(".hero__top .eyebrow"); if(eb)eb.textContent=SITE.eyebrow;
   const mt=document.getElementById("proModalT"); if(mt)mt.textContent=`Enjoy ${SITE.display}, ad-free`;
 }
