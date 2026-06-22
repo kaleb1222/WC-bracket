@@ -221,7 +221,7 @@
   .nav__rm:hover{border-color:var(--bronze);color:var(--bronze-2)}
   .nav__rm.done{border-color:var(--green);color:var(--green);cursor:default}
   /* modal */
-  .modal{position:fixed;inset:0;z-index:90;display:none;align-items:center;justify-content:center;padding:20px;
+  .modal{position:fixed;inset:0;z-index:1000;display:none;align-items:center;justify-content:center;padding:20px;
     background:rgba(8,6,4,.72);backdrop-filter:blur(4px)}
   .modal.on{display:flex}
   .modal__card{width:100%;max-width:400px;background:linear-gradient(180deg,var(--panel),var(--espresso-2));
@@ -761,7 +761,10 @@ if(adModal){
   document.getElementById("adBuy").addEventListener("click",startCheckout);
   document.getElementById("adRestore").addEventListener("click",e=>{e.preventDefault();restore();});
 }
-document.addEventListener("click",e=>{const b=e.target.closest("[data-buy]");if(b){e.preventDefault();openModal();}});
+document.addEventListener("click",e=>{
+  if(e.target.closest("#rmAds")){e.preventDefault();openModal();return;}
+  const b=e.target.closest("[data-buy]");if(b){e.preventDefault();openModal();}
+});
 
 (async()=>{ ADS_OFF=await resolveEntitlement(); applyAds(); })();
 
